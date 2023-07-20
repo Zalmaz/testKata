@@ -19,7 +19,7 @@ type Operation struct {
 }
 
 func main() {
-
+	var res int
 	p := Operation{}
 	s := bufio.NewScanner(os.Stdin)
 	s.Scan()
@@ -41,5 +41,16 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(p.firstNum, p.operator, p.lastNum)
+
+	switch p.operator {
+	case "+":
+		res = p.firstNum + p.lastNum
+	case "-":
+		res = p.firstNum - p.lastNum
+	case "*":
+		res = p.firstNum * p.lastNum
+	case "/":
+		res = p.firstNum / p.lastNum
+	}
+	fmt.Println(res)
 }
