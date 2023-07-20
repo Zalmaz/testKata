@@ -16,41 +16,61 @@ type Operation struct {
 	firstNum int
 	lastNum  int
 	operator string
+	isARab   bool
+	result   int
 }
 
 func main() {
-	var res int
 	p := Operation{}
+	str := input()
+	slice := split(str)
+	validator(&p, slice)
+	operation(&p)
+
+	fmt.Println(p.result)
+}
+
+func input() string {
 	s := bufio.NewScanner(os.Stdin)
 	s.Scan()
 	str := s.Text()
-	o := strings.Split(str, " ")
-	if len(o) != 3 {
+	return str
+}
+
+func split(str string) []string {
+	slice := strings.Split(str, " ")
+	if len(slice) != 3 {
 		panic("формат математической операции не удовлетворяет заданию — два операнда и один оператор (+, -, /, *).")
 	}
-	if !strings.Contains(defaultOperator, o[1]) && len(o) != 1 {
+	return slice
+}
+
+func validator(o *Operation, slice []string) {
+	var err error
+	if !strings.Contains(defaultOperator, slice[1]) && len(slice) != 1 {
 		panic("Невалидный оператор")
 	}
-	p.operator = o[1]
-	var err error
-	p.firstNum, err = strconv.Atoi(o[0])
-	if err != nil {
-		panic(err)
+	o.operator = slice[1]
+	o.firstNum, err = strconv.Atoi(slice[0])
+	if err != nil || o.firstNum > 10 || o.firstNum < 0 {
+		panic("Неверное первое число")
 	}
-	p.lastNum, err = strconv.Atoi(o[2])
-	if err != nil {
-		panic(err)
+	o.lastNum, err = strconv.Atoi(slice[2])
+	if err != nil || o.lastNum > 10 || o.lastNum < 0 {
+		panic("Неверное второе число")
 	}
 
-	switch p.operator {
+}
+
+func operation(o *Operation) {
+	switch o.operator {
 	case "+":
-		res = p.firstNum + p.lastNum
+		o.result = o.firstNum + o.lastNum
 	case "-":
-		res = p.firstNum - p.lastNum
+		o.result = o.firstNum - o.lastNum
 	case "*":
-		res = p.firstNum * p.lastNum
+		o.result = o.firstNum * o.lastNum
 	case "/":
-		res = p.firstNum / p.lastNum
+		o.result = o.firstNum / o.lastNum
 	}
-	fmt.Println(res)
 }
