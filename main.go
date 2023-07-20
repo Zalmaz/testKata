@@ -1,28 +1,32 @@
 package main
 
-import "fmt"
+import (
+	"bufio"
+	"os"
+	"strings"
+)
+
+const (
+	defaultOperator = "+-/*"
+)
+
+type Operation struct {
+	firstNum int
+	lastNum  int
+	operator string
+}
 
 func main() {
-	var a, b, result int
-	var s string
-	fmt.Scan(&a)
 
-	fmt.Scan(&s)
-	fmt.Scan(&b)
-	if a < 0 || b < 0 || a > 10 || b > 10 {
-		panic("Ошибка, цифры не валидны")
+	s := bufio.NewScanner(os.Stdin)
+	s.Scan()
+	str := s.Text()
+	o := strings.Split(str, " ")
+	if len(o) != 3 {
+		panic("формат математической операции не удовлетворяет заданию — два операнда и один оператор (+, -, /, *).")
 	}
-	switch s {
-	case "+":
-		result = a + b
-	case "-":
-		result = a - b
-	case "*":
-		result = a * b
-	case "/":
-		result = a / b
-	default:
-		panic("Операнд не валиден")
+	if !strings.Contains(defaultOperator, o[1]) && len(o) != 1 {
+		panic("Невалидный оператор")
 	}
-	fmt.Printf("%d %s %d = %d\n", a, s, b, result)
+
 }
