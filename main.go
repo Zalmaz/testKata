@@ -2,7 +2,9 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -18,6 +20,7 @@ type Operation struct {
 
 func main() {
 
+	p := Operation{}
 	s := bufio.NewScanner(os.Stdin)
 	s.Scan()
 	str := s.Text()
@@ -28,5 +31,15 @@ func main() {
 	if !strings.Contains(defaultOperator, o[1]) && len(o) != 1 {
 		panic("Невалидный оператор")
 	}
-
+	p.operator = o[1]
+	var err error
+	p.firstNum, err = strconv.Atoi(o[0])
+	if err != nil {
+		panic(err)
+	}
+	p.lastNum, err = strconv.Atoi(o[2])
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(p.firstNum, p.operator, p.lastNum)
 }
