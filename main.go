@@ -30,6 +30,9 @@ func main() {
 	validator(&p, slice)
 	operation(&p)
 	if p.isRim {
+		if p.result <= 0 {
+			log.Fatal("В римских числах нет отрицательных")
+		}
 		fmt.Println(toRim(p.result))
 	} else {
 		fmt.Println(p.result)
@@ -104,7 +107,7 @@ func toRim(result int) string {
 	case result == 0:
 		return ""
 	case result < 4:
-		return "I" + toRim(result)
+		return "I" + toRim(result-1)
 	case result == 4:
 		return "IV"
 	case result < 9:
