@@ -13,21 +13,27 @@ const (
 )
 
 type Operation struct {
-	firstNum int
-	lastNum  int
-	operator string
-	isARab   bool
-	result   int
+	firstNum  int
+	lastNum   int
+	operator  string
+	isRim     bool
+	result    int
+	resultRim string
 }
 
 func main() {
 	p := Operation{}
 	str := input()
 	slice := split(str)
+	checkNum(&p, slice)
 	validator(&p, slice)
 	operation(&p)
+	if p.isRim {
+		fmt.Println(toRim(p.result))
+	} else {
+		fmt.Println(p.result)
+	}
 
-	fmt.Println(p.result)
 }
 
 func input() string {
@@ -45,18 +51,35 @@ func split(str string) []string {
 	return slice
 }
 
+func checkNum(o *Operation, slice []string) {
+	rim := map[string]int{"I": 1, "II": 2, "III": 3, "IV": 4, "V": 5, "VI": 6, "VII": 7, "VIII": 8, "IX": 9, "X": 10}
+	s, ok := rim[slice[0]]
+	if !ok {
+		o.isRim = false
+		o.firstNum, _ = strconv.Atoi(slice[0])
+		return
+	}
+	o.firstNum = s
+	s, ok = rim[slice[2]]
+	if !ok {
+		o.isRim = false
+		o.lastNum, _ = strconv.Atoi(slice[2])
+		return
+	}
+	o.lastNum = s
+	o.isRim = true
+}
+
 func validator(o *Operation, slice []string) {
 	var err error
 	if !strings.Contains(defaultOperator, slice[1]) && len(slice) != 1 {
 		panic("Невалидный оператор")
 	}
 	o.operator = slice[1]
-	o.firstNum, err = strconv.Atoi(slice[0])
-	if err != nil || o.firstNum > 10 || o.firstNum < 0 {
+	if err != nil || o.firstNum > 10 || o.firstNum < 1 {
 		panic("Неверное первое число")
 	}
-	o.lastNum, err = strconv.Atoi(slice[2])
-	if err != nil || o.lastNum > 10 || o.lastNum < 0 {
+	if err != nil || o.lastNum > 10 || o.lastNum < 1 {
 		panic("Неверное второе число")
 	}
 
@@ -73,4 +96,34 @@ func operation(o *Operation) {
 	case "/":
 		o.result = o.firstNum / o.lastNum
 	}
+}
+
+func toRim(result int) string {
+	switch {
+	case result < 0:
+		return "в римской системе нет отрицательных чисел."
+	case result > 100:
+		return "Результат больше 100, не подходит под условия задачи"
+	case result == 0:
+		return ""
+	case result < 4:
+		return "I" + toRim(result)
+	case result == 4:
+		return "IV"
+	case result < 9:
+		return "V" + toRim(result-5)
+	case result == 9:
+		return "IX"
+	case result < 40:
+		return "X" + toRim(result-10)
+	case result < 50:
+		return "XL" + toRim(result-40)
+	case result < 90:
+		return "L" + toRim(result-50)
+	case result < 100:
+		return "XC" + toRim(result-90)
+	case result == 100:
+		return "C"
+	}
+	return ""
 }
