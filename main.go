@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -46,7 +47,7 @@ func input() string {
 func split(str string) []string {
 	slice := strings.Split(str, " ")
 	if len(slice) != 3 {
-		panic("формат математической операции не удовлетворяет заданию — два операнда и один оператор (+, -, /, *).")
+		log.Fatal("формат математической операции не удовлетворяет заданию — два операнда и один оператор (+, -, /, *).")
 	}
 	return slice
 }
@@ -69,14 +70,14 @@ func checkNum(o *Operation, slice []string) {
 func validator(o *Operation, slice []string) {
 	var err error
 	if !strings.Contains(defaultOperator, slice[1]) && len(slice) != 1 {
-		panic("Невалидный оператор")
+		log.Fatal("Невалидный оператор")
 	}
 	o.operator = slice[1]
 	if err != nil || o.firstNum > 10 || o.firstNum < 1 {
-		panic("Неверное первое число")
+		log.Fatal("Неверное первое число")
 	}
 	if err != nil || o.lastNum > 10 || o.lastNum < 1 {
-		panic("Неверное второе число")
+		log.Fatal("Неверное второе число")
 	}
 
 }
