@@ -57,15 +57,11 @@ func checkNum(o *Operation, slice []string) {
 	if !ok {
 		o.isRim = false
 		o.firstNum, _ = strconv.Atoi(slice[0])
-		return
-	}
-	o.firstNum = s
-	s, ok = rim[slice[2]]
-	if !ok {
-		o.isRim = false
 		o.lastNum, _ = strconv.Atoi(slice[2])
 		return
 	}
+	o.firstNum = s
+	s, _ = rim[slice[2]]
 	o.lastNum = s
 	o.isRim = true
 }
